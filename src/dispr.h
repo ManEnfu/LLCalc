@@ -1,5 +1,5 @@
 #define dispr(reg) \
-    printf("%d\n", \
+    printf("\n%d\n", \
         reg.bit8 ? ( \
             reg.bit7 ? ( \
                 reg.bit6 ? ( \

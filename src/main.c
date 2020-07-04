@@ -18,6 +18,7 @@ typedef struct {
 #include "pow.h"
 #include "srt.h"
 #include "div.h"
+#include "mod.h"
 #include "inp.h"
 
 reg reg1; // first operand / final result
@@ -26,7 +27,7 @@ reg reg3; // first operand / temp result value for power and square root
 reg reg4; // temp used in calculation
 
 #define isnum(c) \
-    (c != EOF && c != '+' && c != '-' && c != '/' && c != '*' && c != '^' && c != 'r')
+    (c != EOF && c != '+' && c != '-' && c != '/' && c != '*' && c != '^' && c != 'r' && c != '%')
 
 #define powprecedence(label1, label2, label3) \
     zero(reg3); \
@@ -88,6 +89,7 @@ int main (int args, char* argv[]) {
                 case '-':
                 case '*':
                 case '/':
+                case '%':
                 case EOF:
                 jmpadd:
                     add(reg1, reg2);
@@ -104,13 +106,14 @@ int main (int args, char* argv[]) {
             switch(c) {
                 case '^':
                     powprecedence(sp1, sp2, sp3); 
-                    goto jmpmul;
+                    goto jmpsub;
                 case 'r':
                     srtprecedence(sr1, sr2);
                 case '+':
                 case '-':
                 case '*':
                 case '/':
+                case '%':
                 case EOF:
                 jmpsub:
                     sub(reg1, reg2);
@@ -134,6 +137,7 @@ int main (int args, char* argv[]) {
                 case '-':
                 case '*':
                 case '/':
+                case '%':
                 case EOF:
                 jmpmul:
                     mult(reg1, reg2);
@@ -157,10 +161,35 @@ int main (int args, char* argv[]) {
                 case '-':
                 case '*':
                 case '/':
+                case '%':
                 case EOF:
                 jmpdiv:
                     mov(reg4, reg1);
                     div(reg1, reg4, reg2, divlabel1, divlabel2);
+                    goto newchar;
+            }
+        } else if (c == '%') {
+            zero(reg2);
+            mod1:
+            c = fgetc(file);
+            if (isnum(c)) {
+                inp(c, reg2);
+                goto mod1;
+            }
+            switch(c) {
+                case '^':
+                    powprecedence(mdp1, mdp2, mdp3); 
+                    goto jmpmod;
+                case 'r':
+                    srtprecedence(mdr1, mdr2);
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                case '%':
+                case EOF:
+                jmpmod:
+                    mod(reg1, reg2, modlabel1, modlabel2);
                     goto newchar;
             }
         } else if (c == '^') {
@@ -178,6 +207,7 @@ int main (int args, char* argv[]) {
                 case '-':
                 case '*':
                 case '/':
+                case '%':
                 case EOF:
                     mov(reg4, reg1);
                     pow(reg1, reg4, reg2, powlabel1, powlabel2);
@@ -198,6 +228,7 @@ int main (int args, char* argv[]) {
                 case '-':
                 case '*':
                 case '/':
+                case '%':
                 case EOF:
                     srt(reg1, reg2, reg4, sqrtlabel1);
                     goto newchar;

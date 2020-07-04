@@ -1,6 +1,8 @@
 #ifndef MACROS_H
 #define MACROS_H 1
 
+#define overflow() printf("\r(Overflow) ")
+
 #define inc(dest) \
     dest.bit1 = !dest.bit1; \
     if (!dest.bit1) { \
@@ -17,6 +19,7 @@
                             dest.bit7 = !dest.bit7; \
                             if (!dest.bit7) { \
                                 dest.bit8 = !dest.bit8; \
+                                if (!dest.bit8) overflow(); \
                             } \
                         } \
                     } \
@@ -79,6 +82,7 @@
                                 dest.bit7 = !dest.bit7; \
                                 if (!dest.bit7) { \
                                     dest.bit8 = !dest.bit8; \
+                                    if (!dest.bit8) overflow(); \
                                 } \
                             } \
                         } \
@@ -101,6 +105,7 @@
                             dest.bit7 = !dest.bit7; \
                             if (!dest.bit7) { \
                                 dest.bit8 = !dest.bit8; \
+                                if (!dest.bit8) overflow(); \
                             } \
                         } \
                     } \
@@ -120,6 +125,7 @@
                         dest.bit7 = !dest.bit7; \
                         if (!dest.bit7) { \
                             dest.bit8 = !dest.bit8; \
+                            if (!dest.bit8) overflow(); \
                         } \
                     } \
                 } \
@@ -136,6 +142,7 @@
                     dest.bit7 = !dest.bit7; \
                     if (!dest.bit7) { \
                         dest.bit8 = !dest.bit8; \
+                        if (!dest.bit8) overflow(); \
                     } \
                 } \
             } \
@@ -149,6 +156,7 @@
                 dest.bit7 = !dest.bit7; \
                 if (!dest.bit7) { \
                     dest.bit8 = !dest.bit8; \
+                    if (!dest.bit8) overflow(); \
                 } \
             } \
         } \
@@ -159,6 +167,7 @@
             dest.bit7 = !dest.bit7; \
             if (!dest.bit7) { \
                 dest.bit8 = !dest.bit8; \
+                if (!dest.bit8) overflow(); \
             } \
         } \
     } \
@@ -166,10 +175,12 @@
         dest.bit7 = !dest.bit7; \
         if (!dest.bit7) { \
             dest.bit8 = !dest.bit8; \
+            if (!dest.bit8) overflow(); \
         } \
     } \
     if (src.bit8) { \
         dest.bit8 = !dest.bit8; \
+        if (!dest.bit8) overflow(); \
     }
 
 #define sub(dest, src) \

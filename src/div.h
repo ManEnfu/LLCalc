@@ -10,6 +10,7 @@
     sub(num, den); \
     inc(dest); \
     if (leq(den, num)) goto label1; \
-    label2:
+    label2: \
+    printf("\r         ");
 
 #endif
